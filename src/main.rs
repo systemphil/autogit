@@ -6,24 +6,47 @@ use axum::{
     Router,
 };
 use serde::{Deserialize, Serialize};
-use tokio::runtime::Runtime;
 
 #[tokio::main]
 async fn main() {
-    let app = Router::new().route("/", get(|| async { "Hello, World! Rust ❤️‍🔥" }));
+    let app = Router::new()
+        .route("/", get(|| async { "Hello, World! Rust ❤️‍🔥" }))
+        .route("/gh", post(handle_webhook));
+
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8080").await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
 
-// async fn handle_webhook(
-//     event: WebhookEvent,
-//     signature: GitHubWebhookSignature,
-// ) -> impl IntoResponse {
-//     // Verify the webhook signature here
+async fn handle_webhook(event: GitHubWebhook) -> impl IntoResponse {
+    // Handle the webhook event here
+    println!("Received webhook event: {:?}", event);
 
-//     // ... (Rest of the webhook handling code)
-// }
+    Ok(StatusCode::OK)
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+struct GitHubWebhook {
+    // Add fields relevant to your webhook events here
+    action: String,
+    repository: Repository,
+    pull_request: PullRequest,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+struct Repository {
+    // Add fields relevant to the repository
+    name: String,
+    full_name: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+struct PullRequest {
+    // Add fields relevant to the pull request
+    number: i64,
+    title: String,
+}
+
 
 // struct GitHubWebhookSignature(String);
 
