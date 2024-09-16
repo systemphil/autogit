@@ -66,10 +66,10 @@ COPY . .
 EXPOSE 8080
 
 # Copy the startup script
-COPY start.sh /usr/local/bin/start.sh
+COPY start.sh start.sh
 
 # Make the script executable
-RUN chmod +x /usr/local/bin/start.sh
+RUN chmod +x start.sh
 
 # Command to run the application
-CMD ["/usr/local/bin/start.sh"]
+CMD ["start.sh"]
