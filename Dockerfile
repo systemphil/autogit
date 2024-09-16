@@ -8,4 +8,5 @@ RUN cargo build --release
 FROM debian:buster-slim
 COPY --from=build /app/target/release/autogit /app/autogit
 RUN chmod +x /app/autogit
+EXPOSE 8080
 CMD "/app/autogit"
