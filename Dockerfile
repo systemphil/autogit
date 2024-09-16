@@ -31,12 +31,13 @@ RUN apt-get update && apt-get install -y \
     curl \
     git \
     unzip \
+    wget \
     build-essential \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Bun
-RUN curl -fsSL https://bun.sh/install | bash
+RUN wget -qO- https://bun.sh/install | bash
 
 # Add Bun to the PATH
 ENV BUN_INSTALL="/root/.bun"
