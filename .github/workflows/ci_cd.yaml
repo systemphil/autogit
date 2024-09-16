@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Check if running in the parent repository
         run: |
-          if [ "${GITHUB_REPOSITORY}" != "systemphil/sphil" ]; then
+          if [ "${GITHUB_REPOSITORY}" != "systemphil/autogit" ]; then
           echo "This workflow is only intended for the parent repository. Skipping deployment."
           exit 1
           fi
