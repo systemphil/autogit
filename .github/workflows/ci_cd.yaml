@@ -27,37 +27,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Cache restore
-        uses: actions/cache/restore@v4
-        id: cache-restore
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('./Cargo.lock') }} }}
-
-      - name: Install Rust
-        if: steps.cache-restore.outputs.cache-hit != 'true'
-        uses: actions-rust-lang/setup-rust-toolchain@v1
-
-      - name: Install dependencies
-        if: steps.cache-restore.outputs.cache-hit != 'true'
-        run: cargo build --release --package prepyrus_runner
-
-      - name: Save to cache
-        id: cache-save
-        if: steps.cache-restore.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('./Cargo.lock') }} }}
-
       - name: Auth
         uses: "google-github-actions/auth@v2"
         with:
@@ -91,11 +60,8 @@ jobs:
           fi
 
       - name: Build and Push Container
-        # NEXT_PUBLIC_ env variables have to be set during the build phase.
         run: |-
           docker build \
-            --build-arg NEXT_PUBLIC_SITE_ROOT=${{secrets.NEXT_PUBLIC_SITE_ROOT}} \
-            --build-arg NEXT_PUBLIC_GA_ID=${{secrets.NEXT_PUBLIC_GA_ID}} \
             -f Dockerfile \
             -t "${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ env.TAG }}" ./
           docker push "${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ env.TAG }}"
