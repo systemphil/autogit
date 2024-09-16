@@ -24,7 +24,7 @@
 
 
 # Use a lightweight Ubuntu image
-FROM ubuntu:22.04-slim
+FROM bookworm-slim
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
