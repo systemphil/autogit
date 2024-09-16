@@ -5,6 +5,6 @@ COPY Cargo.toml /app/
 COPY Cargo.lock /app/
 RUN cargo build --release
 
-FROM debian:buster-slim  
-COPY --from=build /app/target/release/autogit /app/autogit  
+FROM debian:buster-slim
+COPY --from=build /app/target/release/autogit /app/autogit
 CMD "/app/autogit"
