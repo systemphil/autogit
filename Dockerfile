@@ -13,7 +13,7 @@
 
 
 # =========== BUN IMAGE
-FROM oven/bun AS base
+FROM oven/bun:debian AS base
 WORKDIR /app
 
 RUN (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
