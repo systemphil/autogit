@@ -52,7 +52,7 @@
 FROM ubuntu:latest
 
 # Install dependencies
-RUN sudo apt update && apt install -y \
+RUN apt update && apt install -y \
     curl \
     git \
     unzip \
