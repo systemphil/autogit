@@ -35,7 +35,6 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
-RUN sudo apt install unzip 
 # Install Bun
 RUN curl -fsSL https://bun.sh/install | bash
 
