@@ -24,7 +24,7 @@
 
 
 # Use a lightweight Ubuntu image
-FROM debian:bookworm-slim
+FROM debian:bookworm
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
