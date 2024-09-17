@@ -6,7 +6,7 @@ if [ -n "$GH_PAT" ]; then
   gh auth status
   git config --global user.name "Autogit"
   git config --global user.email "service@systemphil.com"
-  git clone https://github.com/systemphil/sphil.git
+  gh repo clone systemphil/sphil
 else
   echo "GH_PAT environment variable is not set."
   exit 1
