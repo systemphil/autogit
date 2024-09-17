@@ -70,7 +70,9 @@ app.listen(port, () => {
 function checkoutPR(prNumber: number) {
     try {
         // Checkout the pull request
-        execSync(`gh pr checkout ${prNumber}`, { stdio: "inherit" });
+        execSync(`( cd sphil ; gh pr checkout ${prNumber} )`, {
+            stdio: "inherit",
+        });
         console.info(`Checked out PR #${prNumber}`);
     } catch (error) {
         console.error(`Failed to check out PR #${prNumber}:`, error);
@@ -79,7 +81,7 @@ function checkoutPR(prNumber: number) {
 
 function runPrettier() {
     try {
-        execSync("prettier --write .", { stdio: "inherit" });
+        execSync("( cd sphil ; bun prettier --write . )", { stdio: "inherit" });
         console.info("Prettier has formatted the files.");
     } catch (error) {
         console.error("Failed to run Prettier:", error);
@@ -89,14 +91,19 @@ function runPrettier() {
 function commitAndPushChanges() {
     try {
         // Check if there are any changes to commit
-        const changes = execSync("git status --porcelain").toString();
+        const changes = execSync(
+            "( cd sphil ; git status --porcelain )"
+        ).toString();
         if (changes) {
             console.log("Changes detected, committing and pushing...");
-            execSync("git add .", { stdio: "inherit" });
-            execSync('git commit -m "Apply Prettier formatting"', {
-                stdio: "inherit",
-            });
-            execSync("git push", { stdio: "inherit" });
+            execSync("( cd sphil ; git add . )", { stdio: "inherit" });
+            execSync(
+                '( cd sphil ; git commit -m "Apply Prettier formatting" )',
+                {
+                    stdio: "inherit",
+                }
+            );
+            execSync("( cd sphil ; git push )", { stdio: "inherit" });
             console.log("Changes pushed successfully.");
         } else {
             console.log("No changes to commit.");
