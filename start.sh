@@ -5,7 +5,7 @@ if [ -n "$GH_PAT" -a -n "$SSH_KEY" ]; then
   mkdir -p ~/.ssh
   # Add the private key from the environment variable
   echo "$SSH_KEY" > ~/.ssh/id_rsa
-  ssh-keyscan -p 8888 -t rsa github.com >> ~/.ssh/known_hosts
+  curl -L https://api.github.com/meta | jq -r '.ssh_keys | .[]' | sed -e 's/^/github.com /' >> ~/.ssh/known_hosts
   chmod 600 ~/.ssh/id_rsa
   chmod 644 ~/.ssh/known_hosts
 
