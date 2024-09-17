@@ -31,36 +31,36 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 // Webhook route to handle GitHub events
-app.post("/gh", (req: Request, res: Response) => {
-    // Verify the signature if a secret is provided
-    if (!verifySignature(req, GH_WH_SEC)) {
-        return res.status(401).send("Invalid signature");
-    }
+// app.post("/gh", (req: Request, res: Response) => {
+//     // Verify the signature if a secret is provided
+//     if (!verifySignature(req, GH_WH_SEC)) {
+//         return res.status(401).send("Invalid signature");
+//     }
 
-    const event = req.headers["x-github-event"];
-    const payload = req.body;
+//     const event = req.headers["x-github-event"];
+//     const payload = req.body;
 
-    console.info(`Received event: ${event}`);
+//     console.info(`Received event: ${event}`);
 
-    // Handle pull request events
-    if (event === "pull_request") {
-        const action = payload.action;
-        const prNumber = payload.number;
-        console.info(`PR #${prNumber} action: ${action}`);
+//     // Handle pull request events
+//     if (event === "pull_request") {
+//         const action = payload.action;
+//         const prNumber = payload.number;
+//         console.info(`PR #${prNumber} action: ${action}`);
 
-        // Handle different PR actions
-        if (action === "opened" || action === "ready_for_review") {
-            // Perform actions like running prettier here
-            console.info(`PR #${prNumber} is ready for action!`);
-        }
+//         // Handle different PR actions
+//         if (action === "opened" || action === "ready_for_review") {
+//             // Perform actions like running prettier here
+//             console.info(`PR #${prNumber} is ready for action!`);
+//         }
 
-        checkoutPR(prNumber);
-        runPrettier();
-        commitAndPushChanges();
-    }
+//         checkoutPR(prNumber);
+//         runPrettier();
+//         commitAndPushChanges();
+//     }
 
-    res.status(200).send("Webhook received");
-});
+//     res.status(200).send("Webhook received");
+// });
 
 // Start the server
 app.listen(port, () => {
