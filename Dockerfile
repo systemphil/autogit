@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y \
     bash \
     curl \
     unzip \
+    jq \
+    sed \
     git \
     sudo \
     && apt-get clean
