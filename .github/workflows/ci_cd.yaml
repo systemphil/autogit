@@ -12,6 +12,7 @@ env:
     REGION: ${{ secrets.REGION }}
     GH_WEBHOOK_SECRET: ${{ secrets.GH_WEBHOOK_SECRET }}
     GH_PAT: ${{ secrets.GH_PAT }}
+    SSH_KEY: ${{ secrets.SSH_KEY }}
     TAG: latest
 
 jobs:
@@ -75,5 +76,5 @@ jobs:
                     --region=${{ env.REGION }} \
                     --max-instances=1 \
                     --min-instances=default \
-                    --set-secrets=GITHUB_WEBHOOK_SECRET=${{ env.GH_WEBHOOK_SECRET }},GH_PAT=${{ env.GH_PAT }} \
+                    --set-secrets=GITHUB_WEBHOOK_SECRET=${{ env.GH_WEBHOOK_SECRET }},GH_PAT=${{ env.GH_PAT }},SSH_KEY=${{ env.SSH_KEY }} \
                     --image="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ env.TAG }}"
