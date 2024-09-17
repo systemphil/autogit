@@ -7,6 +7,7 @@ if [ -n "$GH_PAT" ]; then
   git config --global user.name "Autogit"
   git config --global user.email "service@systemphil.com"
   gh repo clone systemphil/sphil
+  ( cd sphil ; git remote set-url origin https://$GH_PAT@github.com/systemphil/sphil.git )
 else
   echo "GH_PAT environment variable is not set."
   exit 1
