@@ -171,6 +171,9 @@ EXPOSE 8080
 COPY . .
 COPY start.sh start.sh
 
+# Install dependencies
+RUN bun install
+
 # Make the script executable
 RUN chmod +x start.sh
 
