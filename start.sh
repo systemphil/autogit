@@ -5,7 +5,9 @@ if [ -n "$GH_PAT" -a -n "$SSH_KEY" ]; then
   mkdir -p ~/.ssh
   # Add the private key from the environment variable
   echo "$SSH_KEY" > ~/.ssh/id_rsa
+  ssh-keyscan github.com >> ~/.ssh/known_hosts
   chmod 600 ~/.ssh/id_rsa
+  chmod 644 ~/.ssh/known_hosts
 
   # Start the ssh-agent and add the private key
   eval "$(ssh-agent -s)"
