@@ -6,14 +6,9 @@ const app = express();
 const port = 8080;
 
 const GH_WH_SEC = process.env.GITHUB_WEBHOOK_SECRET ?? "";
-const GH_PAT = process.env.GITHUB_PAT ?? "";
 
 if (!GH_WH_SEC) {
     console.error("GITHUB_WEBHOOK_SECRET is not set");
-    process.exit(1);
-}
-if (!GH_PAT) {
-    console.error("GITHUB_PAT is not set");
     process.exit(1);
 }
 
