@@ -6,6 +6,7 @@ if [ -n "$GH_PAT" ]; then
   gh auth status
   git config --global user.name "Autogit"
   git config --global user.email "service@systemphil.com"
+  git config --global credential.helper store
   gh repo clone systemphil/sphil
   ( cd sphil ; git remote set-url origin https://$GH_PAT@github.com/systemphil/sphil.git )
 else
