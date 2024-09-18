@@ -42,6 +42,8 @@ app.post("/gh", (req: Request, res: Response) => {
 
     console.info(`Received event: ${event}`);
 
+    console.info(JSON.stringify(payload, null, 2));
+
     // Handle pull request events
     if (event === "pull_request") {
         const action = payload.action;
