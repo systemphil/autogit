@@ -48,6 +48,8 @@ app.post("/gh", (req: Request, res: Response) => {
     if (event === "pull_request") {
         const action = payload.action;
         const prNumber = payload.number;
+        const repo = payload.repository.full_name;
+        const ref = payload.pull_request.head.ref;
         console.info(`PR #${prNumber} action: ${action}`);
 
         // Handle different PR actions
@@ -56,9 +58,10 @@ app.post("/gh", (req: Request, res: Response) => {
             console.info(`PR #${prNumber} is ready for action!`);
         }
 
-        checkoutPR(prNumber);
+        checkoutRepoPR(repo, ref);
         runPrettier();
         commitAndPushChanges();
+        // todo add cleanup
     }
 
     res.status(200).send("Webhook received");
@@ -69,15 +72,16 @@ app.listen(port, () => {
     console.info(`Server is running on http://localhost:${port}`);
 });
 
-function checkoutPR(prNumber: number) {
+function checkoutRepoPR(repo: string, ref: string) {
     try {
         // Checkout the pull request
-        execSync(`( cd sphil ; gh pr checkout ${prNumber} )`, {
+        execSync(`git clone git@github.com:${repo}.git`, {
             stdio: "inherit",
         });
-        console.info(`Checked out PR #${prNumber}`);
+        execSync(`( cd ${repo} ; git checkout ${ref} )`, { stdio: "inherit" });
+        console.info(`Checked out PR #${repo}`);
     } catch (error) {
-        console.error(`Failed to check out PR #${prNumber}:`, error);
+        console.error(`Failed to check out PR #${repo}:`, error);
     }
 }
 
