@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Git & GitHub setup
-if [ -n "$GH_PAT" -a -n "$SSH_KEY" ]; then
+if [ -n "$GH_PAT" -a -n "$SSH_KEY" -a -n "$KNOWN_HOSTS"]; then
   mkdir -p ~/.ssh
   # Add the private key from the environment variable
   echo "$SSH_KEY" > ~/.ssh/id_rsa
-  curl -L https://api.github.com/meta | jq -r '.ssh_keys | .[]' | sed -e 's/^/github.com /' >> ~/.ssh/known_hosts
+  echo "$KNOWN_HOSTS" >> ~/.ssh/known_hosts
   chmod 600 ~/.ssh/id_rsa
   chmod 644 ~/.ssh/known_hosts
 
@@ -19,7 +19,7 @@ if [ -n "$GH_PAT" -a -n "$SSH_KEY" ]; then
   git config --global user.email "service@systemphil.com"
   git clone git@github.com:systemphil/sphil.git
 else
-  echo "GH_PAT or SSH_KEY environment variable is not set."
+  echo "Environment variables are not set."
   exit 1
 fi
 
