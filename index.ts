@@ -58,9 +58,15 @@ app.post("/gh", (req: Request, res: Response) => {
             console.info(`PR #${prNumber} is ready for action!`);
         }
 
-        checkoutRepoPR(repo, ref);
-        runPrettier();
-        commitAndPushChanges();
+        try {
+            checkoutRepoPR(repo, ref);
+            runPrettier();
+            commitAndPushChanges();
+        } catch (error) {
+            console.error("Failed to process PR:", error);
+        } finally {
+            deleteRepo(repo);
+        }
         // todo add cleanup
     }
 
@@ -71,6 +77,15 @@ app.post("/gh", (req: Request, res: Response) => {
 app.listen(port, () => {
     console.info(`Server is running on http://localhost:${port}`);
 });
+
+function deleteRepo(repo: string) {
+    try {
+        execSync(`rm -rf ${repo}`, { stdio: "inherit" });
+        console.info(`Deleted repo ${repo}`);
+    } catch (error) {
+        console.error(`Failed to delete repo ${repo}:`, error);
+    }
+}
 
 function checkoutRepoPR(repo: string, ref: string) {
     try {
