@@ -19,7 +19,7 @@ if [ -n "$GH_PAT" -a -n "$SSH_KEY" -a -n "$KNOWN_HOSTS" ]; then
   gh auth status
   git config --global user.name "Autogit"
   git config --global user.email "service@systemphil.com"
-  git clone git@github.com:systemphil/sphil.git
+  git clone ssh://git@github.com:systemphil/sphil.git
 else
   echo "Environment variables are not set."
   exit 1
