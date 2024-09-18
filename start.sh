@@ -24,11 +24,11 @@ if [ -n "$GH_PAT" -a -n "$SSH_KEY" -a -n "$KNOWN_HOSTS" ]; then
   git clone git@github.com:systemphil/sphil.git
 
   git remote set-url origin git@github.com:systemphil/sphil.git
-  echo "GIT CONFIG: "
-  git config --list
+  # echo "GIT CONFIG: "
+  # git config --list
 
-  echo "GH CONFIG: "
-  gh config get git_protocol
+  # echo "GH CONFIG: "
+  # gh config get git_protocol
 else
   echo "Environment variables are not set."
   exit 1

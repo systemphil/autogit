@@ -68,7 +68,6 @@ app.post("/gh", (req: Request, res: Response) => {
         } finally {
             deleteRepo(repo);
         }
-        // todo add cleanup
     }
 
     res.status(200).send("Webhook received");
@@ -90,15 +89,18 @@ function deleteRepo(repo: string) {
 }
 
 function checkoutRepoPR(repo: string, ref: string) {
+    const slicedRepo = repo.split("/")[1];
     try {
         // Checkout the pull request
         execSync(`git clone git@github.com:${repo}.git`, {
             stdio: "inherit",
         });
-        execSync(`( cd ${repo} ; git checkout ${ref} )`, { stdio: "inherit" });
-        console.info(`Checked out PR #${repo}`);
+        execSync(`( cd ${slicedRepo} ; git checkout ${ref} )`, {
+            stdio: "inherit",
+        });
+        console.info(`Checked out PR #${repo}/${ref}`);
     } catch (error) {
-        console.error(`Failed to check out PR #${repo}:`, error);
+        console.error(`Failed to check out PR #${repo}/${ref}:`, error);
     }
 }
 
