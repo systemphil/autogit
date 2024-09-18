@@ -8,7 +8,7 @@ if [ -n "$GH_PAT" -a -n "$SSH_KEY" -a -n "$KNOWN_HOSTS" ]; then
   echo "$KNOWN_HOSTS" >> ~/.ssh/known_hosts
   echo "Host *" >> ~/.ssh/config && echo "    StrictHostKeyChecking no" >> ~/.ssh/config
   cat ~/.ssh/config
-  
+  export GIT_SSH_COMMAND='ssh -Tv'
   chmod 700 ~/.ssh
   chmod 600 ~/.ssh/config
   chmod 600 ~/.ssh/id_rsa
