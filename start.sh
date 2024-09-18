@@ -2,7 +2,7 @@
 
 # Git & GitHub setup
 if [ -n "$GH_PAT" -a -n "$SSH_KEY" -a -n "$KNOWN_HOSTS" ]; then
-  SSH_DIR="$HOME/.ssh"
+  SSH_DIR="/etc/ssh"
   mkdir -p "$SSH_DIR"
   export GIT_SSH_COMMAND='ssh -Tv'
   echo "$SSH_KEY" > "$SSH_DIR/id_rsa"
