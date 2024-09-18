@@ -6,6 +6,7 @@ if [ -n "$GH_PAT" -a -n "$SSH_KEY" -a -n "$KNOWN_HOSTS" ]; then
   # Add the private key from the environment variable
   echo "$SSH_KEY" > ~/.ssh/id_rsa
   echo "$KNOWN_HOSTS" >> ~/.ssh/known_hosts
+  cat ~/.ssh/known_hosts
   chmod 600 ~/.ssh/id_rsa
   chmod 644 ~/.ssh/known_hosts
 
