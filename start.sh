@@ -6,6 +6,7 @@ if [ -n "$GH_PAT" -a -n "$SSH_KEY" -a -n "$KNOWN_HOSTS" ]; then
   # Add the private key from the environment variable
   echo "$SSH_KEY" > ~/.ssh/id_rsa
   echo "$KNOWN_HOSTS" >> ~/.ssh/known_hosts
+  echo "Host *" >> ~/.ssh/config && echo "    StrictHostKeyChecking no" >> ~/.ssh/config
 
   chmod 700 ~/.ssh
   chmod 600 ~/.ssh/id_rsa
@@ -19,7 +20,7 @@ if [ -n "$GH_PAT" -a -n "$SSH_KEY" -a -n "$KNOWN_HOSTS" ]; then
   gh auth status
   git config --global user.name "Autogit"
   git config --global user.email "service@systemphil.com"
-  git clone ssh://git@github.com:systemphil/sphil.git
+  git clone git@github.com:systemphil/sphil.git
 else
   echo "Environment variables are not set."
   exit 1
