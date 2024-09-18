@@ -50,7 +50,10 @@ app.post("/gh", (req: Request, res: Response) => {
         const prNumber = payload.number;
         const repo = payload.repository.full_name;
         const ref = payload.pull_request.head.ref;
-        console.info(`PR #${prNumber} action: ${action}`);
+        const tempDir = crypto.randomUUID();
+        console.info(
+            `PR #${prNumber} action: ${action}, using temp directory: ${tempDir}`
+        );
 
         // Handle different PR actions
         if (action === "opened" || action === "ready_for_review") {
@@ -59,14 +62,14 @@ app.post("/gh", (req: Request, res: Response) => {
         }
 
         try {
-            deleteRepo(repo);
-            checkoutRepoPR(repo, ref);
-            runPrettier();
-            commitAndPushChanges();
+            deleteRepo(tempDir);
+            checkoutRepoPR(repo, ref, tempDir);
+            runPrettier(tempDir);
+            commitAndPushChanges(tempDir);
         } catch (error) {
             console.error("Failed to process PR:", error);
         } finally {
-            deleteRepo(repo);
+            deleteRepo(tempDir);
         }
     }
 
@@ -79,61 +82,64 @@ app.listen(port, () => {
 });
 
 function deleteRepo(repo: string) {
-    const slicedRepo = repo.split("/")[1];
     try {
-        execSync(`rm -rf ${slicedRepo}`, { stdio: "inherit" });
-        console.info(`Deleted repo ${slicedRepo}`);
+        execSync(`rm -rf ${repo}`, { stdio: "inherit" });
+        console.info(`Deleted repo ${repo}`);
     } catch (error) {
-        console.error(`Failed to delete repo ${slicedRepo}:`, error);
+        console.error(`Failed to delete repo ${repo}:`, error);
     }
 }
 
-function checkoutRepoPR(repo: string, ref: string) {
-    const slicedRepo = repo.split("/")[1];
+function checkoutRepoPR(repo: string, ref: string, tempDir: string) {
     try {
         // Checkout the pull request
-        execSync(`git clone git@github.com:${repo}.git`, {
+        execSync(`git clone git@github.com:${repo}.git ${tempDir}`, {
             stdio: "inherit",
         });
-        execSync(`( cd ${slicedRepo} ; git checkout ${ref} )`, {
+        execSync(`( cd ${tempDir} ; git checkout ${ref} )`, {
             stdio: "inherit",
         });
-        console.info(`Checked out PR #${repo}/${ref}`);
+        console.info(`Checked out PR #${repo}/${ref} in ${tempDir}`);
     } catch (error) {
-        console.error(`Failed to check out PR #${repo}/${ref}:`, error);
+        console.error(
+            `Failed to check out PR #${repo}/${ref} in ${tempDir}:`,
+            error
+        );
     }
 }
 
-function runPrettier() {
+function runPrettier(tempDir: string) {
     try {
-        execSync("( cd sphil ; bun prettier --write . )", { stdio: "inherit" });
+        execSync(`( cd ${tempDir} ; bun prettier --write . )`, {
+            stdio: "inherit",
+        });
         console.info("Prettier has formatted the files.");
     } catch (error) {
         console.error("Failed to run Prettier:", error);
     }
 }
 
-function commitAndPushChanges() {
+function commitAndPushChanges(tempDir: string) {
     try {
         // Check if there are any changes to commit
         const changes = execSync(
-            "( cd sphil ; git status --porcelain )"
+            `( cd ${tempDir} ; git status --porcelain )`
         ).toString();
         if (changes) {
             console.log("Changes detected, adding...");
-            execSync("( cd sphil ; git add . )", { stdio: "inherit" });
+            execSync(`( cd ${tempDir} ; git add . )`, { stdio: "inherit" });
             console.log("Changes added, committing...");
-            execSync("( cd sphil ; git config --list )", {
+            execSync(`( cd ${tempDir} ; git config --list )`, {
                 stdio: "inherit",
             });
             execSync(
-                '( cd sphil ; git commit -m "Apply Prettier formatting" )',
+                '( cd ${tempDir} ; git commit -m "Apply Prettier formatting" )',
                 {
                     stdio: "inherit",
                 }
             );
             console.log("Changes committed, pushing...");
-            execSync("( cd sphil ; git push )", { stdio: "inherit" });
+            execSync(`( cd ${tempDir} ; git push )`, { stdio: "inherit" });
             console.log("Changes pushed successfully.");
         } else {
             console.log("No changes to commit.");
