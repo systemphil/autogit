@@ -17,7 +17,9 @@ if [ -n "$GH_PAT" -a -n "$SSH_KEY" -a -n "$KNOWN_HOSTS" ]; then
   eval "$(ssh-agent -s)"
   ssh-add "$SSH_DIR/id_rsa"
 
-
+  echo "Printing tty..."
+  ls -la /dev/tty
+  echo "Testing SSH connection to GitHub..."
   ssh -Tv git@github.com
 
   echo "$GH_PAT" | gh auth login --with-token
