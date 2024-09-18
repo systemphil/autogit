@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Git & GitHub setup
-if [ -n "$GH_PAT" -a -n "$SSH_KEY" -a -n "$KNOWN_HOSTS"]; then
+if [ -n "$GH_PAT" -a -n "$SSH_KEY" -a -n "$KNOWN_HOSTS" ]; then
   mkdir -p ~/.ssh
   # Add the private key from the environment variable
   echo "$SSH_KEY" > ~/.ssh/id_rsa
