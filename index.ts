@@ -42,7 +42,7 @@ app.post("/gh", (req: Request, res: Response) => {
 
     console.info(`Received event: ${event}`);
 
-    console.info(JSON.stringify(payload, null, 2));
+    // console.info(JSON.stringify(payload, null, 2));
 
     // Handle pull request events
     if (event === "pull_request") {
@@ -59,6 +59,7 @@ app.post("/gh", (req: Request, res: Response) => {
         }
 
         try {
+            deleteRepo(repo);
             checkoutRepoPR(repo, ref);
             runPrettier();
             commitAndPushChanges();
@@ -79,11 +80,12 @@ app.listen(port, () => {
 });
 
 function deleteRepo(repo: string) {
+    const slicedRepo = repo.split("/")[1];
     try {
-        execSync(`rm -rf ${repo}`, { stdio: "inherit" });
-        console.info(`Deleted repo ${repo}`);
+        execSync(`rm -rf ${slicedRepo}`, { stdio: "inherit" });
+        console.info(`Deleted repo ${slicedRepo}`);
     } catch (error) {
-        console.error(`Failed to delete repo ${repo}:`, error);
+        console.error(`Failed to delete repo ${slicedRepo}:`, error);
     }
 }
 

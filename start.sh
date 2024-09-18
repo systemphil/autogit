@@ -8,7 +8,6 @@ if [ -n "$GH_PAT" -a -n "$SSH_KEY" -a -n "$KNOWN_HOSTS" ]; then
   echo "$SSH_KEY" > "$SSH_DIR/id_rsa"
   echo "$KNOWN_HOSTS" > "$SSH_DIR/known_hosts"
   echo "Host *" >> "$SSH_DIR/ssh_config" && echo "    StrictHostKeyChecking no" >> "$SSH_DIR/ssh_config"
-  cat "$SSH_DIR/ssh_config"
   chmod 700 "$SSH_DIR"
   chmod 600 "$SSH_DIR/id_rsa"
   chmod 644 "$SSH_DIR/known_hosts"
