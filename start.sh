@@ -2,21 +2,21 @@
 
 # Git & GitHub setup
 if [ -n "$GH_PAT" -a -n "$SSH_KEY" -a -n "$KNOWN_HOSTS" ]; then
-  mkdir -p ~/.ssh
-  # Add the private key from the environment variable
-  echo "$SSH_KEY" > ~/.ssh/id_rsa
-  echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts
-  echo "Host *" >> ~/.ssh/config && echo "    StrictHostKeyChecking no" >> ~/.ssh/config
-  cat ~/.ssh/config
+  SSH_DIR="$HOME/.ssh"
+  mkdir -p "$SSH_DIR"
   export GIT_SSH_COMMAND='ssh -Tv'
-  chmod 700 ~/.ssh
-  chmod 600 ~/.ssh/config
-  chmod 600 ~/.ssh/id_rsa
-  chmod 644 ~/.ssh/known_hosts
+  echo "$SSH_KEY" > "$SSH_DIR/id_rsa"
+  echo "$KNOWN_HOSTS" > "$SSH_DIR/known_hosts"
+  echo "Host *" >> ~/.ssh/config && echo "    StrictHostKeyChecking no" >> ~/.ssh/config
+  cat "$SSH_DIR/config"
+  chmod 700 "$SSH_DIR"
+  chmod 600 "$SSH_DIR/id_rsa"
+  chmod 644 "$SSH_DIR/known_hosts"
 
   # Start the ssh-agent and add the private key
   eval "$(ssh-agent -s)"
-  ssh-add ~/.ssh/id_rsa
+  ssh-add "$SSH_DIR/id_rsa"
+
 
   ssh -Tv git@github.com
 
