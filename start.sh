@@ -5,12 +5,11 @@ if [ -n "$GH_PAT" -a -n "$SSH_KEY" -a -n "$KNOWN_HOSTS" ]; then
   mkdir -p ~/.ssh
   # Add the private key from the environment variable
   echo "$SSH_KEY" > ~/.ssh/id_rsa
-  head ~/.ssh/id_rsa
-  tail ~/.ssh/id_rsa
   echo "$KNOWN_HOSTS" >> ~/.ssh/known_hosts
   echo "Host *" >> ~/.ssh/config && echo "    StrictHostKeyChecking no" >> ~/.ssh/config
 
   chmod 700 ~/.ssh
+  chmod 600 ~/.ssh/config
   chmod 600 ~/.ssh/id_rsa
   chmod 644 ~/.ssh/known_hosts
 
