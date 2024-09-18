@@ -4,7 +4,7 @@
 if [ -n "$GH_PAT" -a -n "$SSH_KEY" -a -n "$KNOWN_HOSTS" ]; then
   SSH_DIR="/etc/ssh"
   mkdir -p "$SSH_DIR"
-  export GIT_SSH_COMMAND='ssh -Tv'
+  # export GIT_SSH_COMMAND='ssh -Tv' # Uncomment to debug SSH
   echo "$SSH_KEY" > "$SSH_DIR/id_rsa"
   echo "$KNOWN_HOSTS" > "$SSH_DIR/known_hosts"
   echo "Host *" >> "$SSH_DIR/ssh_config" && echo "    StrictHostKeyChecking no" >> "$SSH_DIR/ssh_config"
@@ -17,16 +17,15 @@ if [ -n "$GH_PAT" -a -n "$SSH_KEY" -a -n "$KNOWN_HOSTS" ]; then
   eval "$(ssh-agent -s)"
   ssh-add "$SSH_DIR/id_rsa"
 
-  echo "Printing tty..."
-  ls -la /dev/tty
-  echo "Testing SSH connection to GitHub..."
-  ssh -Tv git@github.com
-
   echo "$GH_PAT" | gh auth login --with-token
   gh auth status
   git config --global user.name "Autogit"
   git config --global user.email "service@systemphil.com"
-  GIT_SSH_COMMAND='ssh -v' git clone git@github.com:systemphil/sphil.git
+  git clone git@github.com:systemphil/sphil.git
+
+  git remote set-url origin git@github.com:systemphil/sphil.git
+  echo "GIT CONFIG: "
+  git config --list
 else
   echo "Environment variables are not set."
   exit 1

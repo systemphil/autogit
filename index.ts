@@ -95,14 +95,19 @@ function commitAndPushChanges() {
             "( cd sphil ; git status --porcelain )"
         ).toString();
         if (changes) {
-            console.log("Changes detected, committing and pushing...");
+            console.log("Changes detected, adding...");
             execSync("( cd sphil ; git add . )", { stdio: "inherit" });
+            console.log("Changes added, committing...");
+            execSync("( cd sphil ; git config --list )", {
+                stdio: "inherit",
+            });
             execSync(
                 '( cd sphil ; git commit -m "Apply Prettier formatting" )',
                 {
                     stdio: "inherit",
                 }
             );
+            console.log("Changes committed, pushing...");
             execSync("( cd sphil ; git push )", { stdio: "inherit" });
             console.log("Changes pushed successfully.");
         } else {
