@@ -74,7 +74,7 @@ app.post("/gh", (req: Request, res: Response) => {
             deleteRepo(tempDir);
             checkoutRepoPR(targetRepo, ref, tempDir);
             runPrettier(tempDir);
-            commitAndPushChanges(tempDir);
+            commitAndPushChanges(tempDir, user);
         } catch (error) {
             console.error("Failed to process PR:", error);
         } finally {
@@ -129,7 +129,7 @@ function runPrettier(tempDir: string) {
     }
 }
 
-function commitAndPushChanges(tempDir: string) {
+function commitAndPushChanges(tempDir: string, user: string) {
     try {
         // Check if there are any changes to commit
         const changes = execSync(
@@ -143,7 +143,7 @@ function commitAndPushChanges(tempDir: string) {
                 stdio: "inherit",
             });
             execSync(
-                '( cd ${tempDir} ; git commit -m "Apply Prettier formatting" )',
+                `( cd ${tempDir} ; git commit -m "ci: formatting applied [on behalf of ${user}" )`,
                 {
                     stdio: "inherit",
                 }
