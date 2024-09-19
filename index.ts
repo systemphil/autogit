@@ -49,10 +49,19 @@ app.post("/gh", (req: Request, res: Response) => {
         const action = payload.action;
         const prNumber = payload.number;
         const repo = payload.repository.full_name;
+        const user = payload.pull_request.user.login;
+
+        const skipUsers = ["Autogit", "Firgrep", "ridetoruin"];
+        if (skipUsers.includes(user)) {
+            console.info(`PR #${prNumber} is from ${user}, skipping...`);
+            return res.status(200).send("Webhook received");
+        }
+
+        const targetRepo = `${user}/sphil`;
         const ref = payload.pull_request.head.ref;
         const tempDir = crypto.randomUUID();
         console.info(
-            `PR #${prNumber} action: ${action}, using temp directory: ${tempDir}`
+            `PR #${prNumber} action: ${action}, target ${targetRepo},using temp directory: ${tempDir}`
         );
 
         // Handle different PR actions
@@ -63,7 +72,7 @@ app.post("/gh", (req: Request, res: Response) => {
 
         try {
             deleteRepo(tempDir);
-            checkoutRepoPR(repo, ref, tempDir);
+            checkoutRepoPR(targetRepo, ref, tempDir);
             runPrettier(tempDir);
             commitAndPushChanges(tempDir);
         } catch (error) {
@@ -105,6 +114,7 @@ function checkoutRepoPR(repo: string, ref: string, tempDir: string) {
             `Failed to check out PR #${repo}/${ref} in ${tempDir}:`,
             error
         );
+        throw error;
     }
 }
 
