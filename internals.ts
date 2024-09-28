@@ -1,4 +1,5 @@
 import { execSync } from "child_process";
+import { INTERNAL_USERS } from "./constants";
 
 function deleteRepo(repo: string) {
     try {
@@ -67,4 +68,17 @@ function commitAndPushChanges(tempDir: string, user: string) {
     }
 }
 
-export { deleteRepo, checkoutRepoPR, runPrettier, commitAndPushChanges };
+function getTargetRepo(user: string): string {
+    if (INTERNAL_USERS.includes(user.toLowerCase())) {
+        return `systemphil/sphil`;
+    }
+    return `${user}/sphil`;
+}
+
+export {
+    deleteRepo,
+    checkoutRepoPR,
+    runPrettier,
+    commitAndPushChanges,
+    getTargetRepo,
+};

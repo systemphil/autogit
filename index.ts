@@ -4,6 +4,7 @@ import {
     checkoutRepoPR,
     commitAndPushChanges,
     deleteRepo,
+    getTargetRepo,
     runPrettier,
 } from "./internals";
 
@@ -55,7 +56,7 @@ app.post("/gh", (req: Request, res: Response) => {
             return res.status(200).send("Webhook received");
         }
 
-        const targetRepo = `${user}/sphil`;
+        const targetRepo = getTargetRepo(user);
         const ref = payload.pull_request.head.ref;
         const tempDir = crypto.randomUUID();
         console.info(

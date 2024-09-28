@@ -1,10 +1,21 @@
 {
     "version": "0.2",
-    "ignorePaths": ["package.json", "package-lock.json"],
+    "ignorePaths": [
+        "package.json",
+        "package-lock.json"
+    ],
     "dictionaryDefinitions": [],
     "dictionaries": [],
-    "words": ["autogit", "sphil"],
-    "enableFiletypes": ["mdx"],
+    "words": [
+        "autogit",
+        "Firgrep",
+        "ridetoruin",
+        "sphil",
+        "systemphil"
+    ],
+    "enableFiletypes": [
+        "mdx"
+    ],
     "ignoreWords": [
         "biblatex",
         "datetime",
