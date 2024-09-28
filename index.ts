@@ -48,16 +48,8 @@ app.post("/gh", (req: Request, res: Response) => {
         const prNumber = payload.number;
         const repo = payload.repository.full_name;
         const user = payload.pull_request.user.login;
-        const canMaintainerModify = payload.pull_request.maintainer_can_modify;
 
-        if (!canMaintainerModify) {
-            console.info(
-                `🛑 PR #${prNumber} has set maintainers_can_modify to ${canMaintainerModify}, skipping...`
-            );
-            return res.status(200).send("Webhook received");
-        }
-
-        const skipUsers = ["Autogit"];
+        const skipUsers = ["autogit"];
         if (skipUsers.includes(user)) {
             console.info(`🛑 PR #${prNumber} is from ${user}, skipping...`);
             return res.status(200).send("Webhook received");
