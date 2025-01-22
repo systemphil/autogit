@@ -4,7 +4,12 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-axum = "0.7.5"
-tokio = { version = "1.40.0", features = ["full"] }
-tower = "0.5.1"
-serde = { version = "1.0.210", features = ["derive"] }
+axum = "0.7.7"
+async-trait = "0.1.67"
+http-body = "1.0.0"
+serde = { version = "1.0", features = ["derive"] }
+thiserror = "1.0.29"
+tokio = { version = "1.0", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+validator = { version = "0.14.0", features = ["derive"] }

@@ -26,7 +26,10 @@ function verifySignature(req: Request, secret: string) {
     const digest = `sha256=${hmac
         .update(JSON.stringify(req.body))
         .digest("hex")}`;
-    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(digest));
+    return crypto.timingSafeEqual(
+        new Uint8Array(Buffer.from(signature)),
+        new Uint8Array(Buffer.from(digest))
+    );
 }
 
 app.get("/", (req: Request, res: Response) => {

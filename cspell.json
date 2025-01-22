@@ -11,7 +11,8 @@
         "Firgrep",
         "ridetoruin",
         "sphil",
-        "systemphil"
+        "systemphil",
+        "thiserror"
     ],
     "enableFiletypes": [
         "mdx"
