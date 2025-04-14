@@ -25,6 +25,8 @@ if [ -n "$GH_PAT" -a -n "$SSH_KEY" -a -n "$KNOWN_HOSTS" ]; then
   git config --global user.name "autogit"
   git config --global user.email "service@systemphil.com"
 
+  gh auth login -p ssh
+
   # Uncomment to debug
   # echo "GIT CONFIG: "
   # git config --list
