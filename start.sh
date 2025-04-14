@@ -19,13 +19,11 @@ if [ -n "$GH_PAT" -a -n "$SSH_KEY" -a -n "$KNOWN_HOSTS" ]; then
   ssh-add "$SSH_DIR/id_rsa"
 
   # gh config set git_protocol ssh --host github.com
-  # echo "$GH_PAT" | gh auth login --with-token
-  # gh auth status
+  echo "$GH_PAT" | gh auth login --with-token
+  gh auth status
   
   git config --global user.name "autogit"
   git config --global user.email "service@systemphil.com"
-
-  gh auth login -p ssh --skip-ssh-key
 
   # Uncomment to debug
   # echo "GIT CONFIG: "
