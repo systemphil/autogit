@@ -1,5 +1,6 @@
-import { execSync } from "child_process";
+import { execSync } from "node:child_process";
 import { INTERNAL_USERS } from "./constants";
+import path from "node:path";
 
 function deleteRepo(repo: string) {
     try {
@@ -70,9 +71,90 @@ function commitAndPushChanges(tempDir: string, user: string) {
 
 function getTargetRepo(user: string): string {
     if (INTERNAL_USERS.includes(user.toLowerCase())) {
-        return `systemphil/sphil`;
+        return "systemphil/sphil";
     }
     return `${user}/sphil`;
+}
+
+function labelPullRequest(repo: string, prNumber: number, tempDir: string) {
+    try {
+        console.info(`🏷️ Starting PR labeling process for #${prNumber}...`);
+
+        const changedFiles = execSync(
+            `( cd ${tempDir} ; git diff --name-only origin/main )`
+        )
+            .toString()
+            .trim()
+            .split("\n");
+
+        const labels = determineLabels(changedFiles);
+
+        if (labels.length > 0) {
+            console.info(
+                `🏷️ Adding labels to PR #${prNumber}: ${labels.join(", ")}`
+            );
+
+            const [owner, repoName] = repo.split("/");
+            // biome-ignore lint/complexity/noForEach: <explanation>
+            labels.forEach((label) => {
+                try {
+                    execSync(
+                        `gh pr edit ${prNumber} --add-label "${label}" --repo ${owner}/${repoName}`,
+                        { stdio: "inherit" }
+                    );
+                } catch (labelError) {
+                    console.error(
+                        `❌ Failed to add label ${label} to PR #${prNumber}:`,
+                        labelError
+                    );
+                }
+            });
+
+            console.info(`✅ Successfully added labels to PR #${prNumber}`);
+        } else {
+            console.info(`ℹ️ No labels to add to PR #${prNumber}`);
+        }
+    } catch (error) {
+        console.error(`❌ Failed to label PR #${prNumber}:`, error);
+    }
+}
+
+function determineLabels(files: string[]): string[] {
+    const labels: string[] = [];
+    let hasContentChanges = false;
+    let hasCodeChanges = false;
+
+    // biome-ignore lint/complexity/noForEach: <explanation>
+    files.forEach((file) => {
+        const filename = path.basename(file);
+        if (
+            filename === "_meta.ts" ||
+            filename === "_meta.tsx" ||
+            filename === "cspell.json"
+        ) {
+            hasContentChanges = true;
+        }
+    });
+
+    // biome-ignore lint/complexity/noForEach: <explanation>
+    files.forEach((file) => {
+        const ext = path.extname(file).toLowerCase();
+        if (ext === ".mdx" || ext === ".md" || ext === ".bib") {
+            hasContentChanges = true;
+        } else if (ext !== "") {
+            hasCodeChanges = true;
+        }
+    });
+
+    if (hasContentChanges) {
+        labels.push("CONTENT");
+    }
+
+    if (hasCodeChanges) {
+        labels.push("CODE");
+    }
+
+    return labels;
 }
 
 export {
@@ -81,4 +163,5 @@ export {
     runPrettier,
     commitAndPushChanges,
     getTargetRepo,
+    labelPullRequest,
 };

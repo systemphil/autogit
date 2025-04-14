@@ -1,10 +1,11 @@
 import express, { type Request, type Response } from "express";
-import crypto from "crypto";
+import crypto from "node:crypto";
 import {
     checkoutRepoPR,
     commitAndPushChanges,
     deleteRepo,
     getTargetRepo,
+    labelPullRequest,
     runPrettier,
 } from "./internals";
 
@@ -69,6 +70,11 @@ app.post("/gh", (req: Request, res: Response) => {
         try {
             deleteRepo(tempDir);
             checkoutRepoPR(targetRepo, ref, tempDir);
+
+            if (["opened", "synchronize", "reopened"].includes(action)) {
+                labelPullRequest(repo, prNumber, tempDir);
+            }
+
             runPrettier(tempDir);
             commitAndPushChanges(tempDir, user);
         } catch (error) {
