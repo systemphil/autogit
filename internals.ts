@@ -76,6 +76,9 @@ function getTargetRepo(user: string): string {
     return `${user}/sphil`;
 }
 
+/**
+ * @deprecated
+ */
 function labelPullRequest(repo: string, prNumber: number, tempDir: string) {
     try {
         console.info(`🏷️ Starting PR labeling process for #${prNumber}...`);
@@ -119,6 +122,9 @@ function labelPullRequest(repo: string, prNumber: number, tempDir: string) {
     }
 }
 
+/**
+ * @deprecated
+ */
 function determineLabels(files: string[]): string[] {
     const labels: string[] = [];
     let hasContentChanges = false;
